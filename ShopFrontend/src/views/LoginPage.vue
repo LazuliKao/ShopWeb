@@ -1,5 +1,5 @@
 <script lang="ts" >
-import { TryGetToken, SetToken } from "@/store/token";
+import { TryGetToken, SetToken } from "@/stores/token";
 export default {
     data() {
         return {

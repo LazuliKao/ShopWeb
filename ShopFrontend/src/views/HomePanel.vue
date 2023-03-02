@@ -1,6 +1,6 @@
 <script lang="ts" >
 import router from "@/router";
-import { TryGetToken } from "@/store/token"; 
+import { TryGetToken } from "@/stores/token"; 
 export default {
     data(): {
         token: undefined | string

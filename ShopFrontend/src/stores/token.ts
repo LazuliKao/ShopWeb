@@ -1,4 +1,4 @@
-import { useCounterStore } from "@/store";
+import { useCounterStore } from "@/stores";
 const store = useCounterStore();
 export function TryGetToken(): { success: true, token: string }
     | { success: false, token: undefined } {
