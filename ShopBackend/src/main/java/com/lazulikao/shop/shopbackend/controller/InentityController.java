@@ -17,6 +17,9 @@ public class InentityController {
     @GetMapping("/login")
     @ResponseBody
     public LoginResult login(String username, String password) {
+        //find user in database
+        User user = userService.findUserByName(username);
+
         return new LoginResult(true, "login success" + username);
     }
     private record LoginResult(boolean success, String message) {}
@@ -28,6 +31,7 @@ public class InentityController {
         user.setEmail(email);
         user.setPasswordMD5(passwordMD5);
         userService.saveUser(user);
+        System.out.println("register success" + username);
         return new RegisterResult(true, "register success" + username);
     }
     private record RegisterResult(boolean success, String message) {}
