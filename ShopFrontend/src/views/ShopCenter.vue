@@ -1,5 +1,3 @@
-<!-- 
-
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import "../components/ShopItemView.vue"
@@ -8,8 +6,8 @@ const OnError = (text: string) => {
 } 
 </script>
 <script lang="ts">
-import type { ShopItem } from "../models/shop";
-import { TryGetToken, GetToken } from "../global";
+import type { ShopItem } from "@/models/shop";
+import { TryGetToken, GetToken } from "@/stores/token";
 export default {
     data(): {
         loaded: boolean,
@@ -134,4 +132,4 @@ export default {
 .numtb {
     width: 30px
 }
-</style>  -->
+</style> 

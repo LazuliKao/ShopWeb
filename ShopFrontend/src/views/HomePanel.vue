@@ -1,5 +1,4 @@
 <script lang="ts" >
-import router from "@/router";
 import { TryGetToken } from "@/stores/token"; 
 export default {
     data(): {

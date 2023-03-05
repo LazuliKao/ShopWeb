@@ -33,11 +33,13 @@ export default {
                         SetToken(token)
                     }, 1000);
                 } else {
-                    this.result = "登录失败！\n信息：" + message;
+                    this.result = "登录失败！信息：" + message;
+                    ElMessage.error(this.result);
                 }
             } catch (error) {
                 let err = (error as Error);
-                this.result = err.name + " : " + err.message;
+                this.result = "登录失败！错误：" + err.name + " : " + err.message;
+                ElMessage.error(this.result);
             }
         }
     }
@@ -53,22 +55,13 @@ export default {
             {{ result }}
             <a v-if="success" href="#/">主页</a>
         </h4>
-        <el-button v-on:click="Submit" class="loginbutton">
+        <el-button @click="Submit" class="loginbutton">
             登录
         </el-button>
+        <el-button @click="Submit" class="loginbutton">
+            <RouterLink to="/register">前往注册</RouterLink>
+        </el-button>    
     </div>
 </template>
 <style scoped>
-div.main {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    width: 300px;
-    transform: translate(-50%, -50%);
-}
-
-.loginbutton {
-    position: absolute;
-    margin-top: 10px;
-}
 </style>
