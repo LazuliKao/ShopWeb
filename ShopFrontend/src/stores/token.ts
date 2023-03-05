@@ -1,8 +1,8 @@
 import { useCounterStore } from "@/stores";
-const store = useCounterStore();
+const getStore = () => useCounterStore();
 export function TryGetToken(): { success: true, token: string }
     | { success: false, token: undefined } {
-    const tk = store.token
+    const tk = getStore().token
     if (tk) {
         return { success: true, token: tk }
     } else {
@@ -10,5 +10,5 @@ export function TryGetToken(): { success: true, token: string }
     }
 }
 export function SetToken(value: string) {
-    store.SetToken(value)
+    getStore().SetToken(value)
 }

@@ -2,11 +2,11 @@ package com.lazulikao.shop.shopbackend.controller;
 import com.lazulikao.shop.shopbackend.entity.User;
 import com.lazulikao.shop.shopbackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-@Controller
+import org.springframework.web.bind.annotation.RestController;
+@RestController
 @RequestMapping("/identity")
 public class InentityController {
     private final UserService userService;
@@ -19,7 +19,6 @@ public class InentityController {
     public LoginResult login(String username, String password) {
         //find user in database
         User user = userService.findUserByName(username);
-
         return new LoginResult(true, "login success" + username);
     }
     private record LoginResult(boolean success, String message) {}
