@@ -7,7 +7,7 @@ const OnError = (text: string) => {
 </script>
 <script lang="ts">
 import type { ShopItem } from "@/models/shop";
-import { TryGetToken, GetToken } from "@/stores/token";
+import { CheckTokenOrRedirect, GetToken } from "@/stores/token";
 export default {
     data(): {
         loaded: boolean,
@@ -49,11 +49,7 @@ export default {
         }
     },
     mounted() {
-        let r = TryGetToken();
-        if (!r.success) {
-            this.$router.push("/login/goto")
-            return
-        }
+        CheckTokenOrRedirect()
         setTimeout(() => {
             this.RefreshAllItems()
             this.RefreshCartItems()

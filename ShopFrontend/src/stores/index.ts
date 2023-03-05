@@ -3,6 +3,7 @@ export const useStore = defineStore('id', {
   state: () => {
     return {
       token: '',
+      source: '',
     }
   },
   actions: {
