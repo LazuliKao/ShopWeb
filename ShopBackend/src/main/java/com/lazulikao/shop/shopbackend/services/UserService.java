@@ -16,7 +16,12 @@ public class UserService {
     public User saveUser(User user) {
         return userRepository.save(user);
     }
-    public Optional<User> tryFindUserByName(String username, String passwordMd5) {
+    public boolean existsUser(String username) {
+        User user = new User();
+        user.setUser(username);
+        return userRepository.exists(Example.of(user));
+    }
+    public Optional<User> tryFindUser(String username, String passwordMd5) {
         User user = new User();
         user.setUser(username);
         user.setPasswordMd5(passwordMd5);

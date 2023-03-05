@@ -1,5 +1,5 @@
 <script lang="ts">
-import { SetToken } from "@/stores/token";
+import { SetToken, GetSource } from "@/stores/token";
 import { calcMd5 } from "@/utils/md5";
 export default {
   data() {
@@ -32,8 +32,13 @@ export default {
         if (success) {
           this.result = message + "\n将在1秒后跳转";
           setTimeout(() => {
-            this.$router.push("/");
             SetToken(token);
+            const { exists, source } = GetSource();
+            if (exists) {
+              this.$router.push(source);
+            } else {
+              this.$router.push("/");
+            }
           }, 1000);
         } else {
           this.result = "登录失败！信息：" + message;

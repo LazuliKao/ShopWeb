@@ -14,7 +14,7 @@ enum UsernameError {
 }
 </script>
 <script lang="ts">
-import { TryGetToken, SetToken } from "@/stores/token";
+import { SetToken, GetSource } from "@/stores/token";
 import { calcMd5 } from "@/utils/md5";
 export default {
   data() {
@@ -26,7 +26,7 @@ export default {
       success: false,
       passwordError: PasswordError.None,
       usernameError: UsernameError.None,
-      busy:false
+      busy: false,
     };
   },
   watch: {
@@ -86,7 +86,7 @@ export default {
         this.checkUsername();
         return;
       }
-      this.  busy=true
+      this.busy = true;
       //send request
       try {
         let response = await this.axios.post("register", {
@@ -106,8 +106,13 @@ export default {
         if (success) {
           this.result = message + "\n将在1秒后跳转";
           setTimeout(() => {
-            this.$router.push("/");
             SetToken(token);
+            const { exists, source } = GetSource();
+            if (exists) {
+              this.$router.push(source);
+            } else {
+              this.$router.push("/");
+            }
           }, 1000);
         } else {
           this.result = "注册失败！信息：" + message;
@@ -118,7 +123,7 @@ export default {
         this.result = "注册失败！错误：" + err.name + " : " + err.message;
         ElMessage.error(this.result);
       }
-    this. busy=false
+      this.busy = false;
     },
   },
 };
@@ -153,7 +158,9 @@ export default {
     </div>
     <br />
     <div class="button-container">
-      <el-button @click="Register" type="primary" :loading="busy"> 注册 </el-button>
+      <el-button @click="Register" type="primary" :loading="busy">
+        注册
+      </el-button>
       <RouterLink to="/login">
         <el-button>返回登录</el-button>
       </RouterLink>

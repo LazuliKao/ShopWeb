@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useStore } from "@/stores";
-defineProps<{}>();
+// import { useStore } from "@/stores";
+// defineProps<{}>();
 </script>
 <script lang="ts">
 export default {
