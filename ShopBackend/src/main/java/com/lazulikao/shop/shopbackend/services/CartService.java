@@ -20,10 +20,12 @@ public class CartService {
         return cartRepository.findAll(Example.of(sample));
     }
     public boolean addToCart(String user, Long id, int count) {
+        //返回指定用户的购物车中指定 id 的商品
         var sample = new CartItem();
         sample.setUser(user);
         sample.setShopItemId(id);
         var items = cartRepository.findAll(Example.of(sample));
+
         if (items.isEmpty()) {
             var newItem = new CartItem();
             newItem.setUser(user);
