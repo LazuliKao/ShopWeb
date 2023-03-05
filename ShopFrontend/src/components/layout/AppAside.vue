@@ -14,7 +14,7 @@
                 <el-icon> <i-ep-menu /> </el-icon>
                 <span>商城</span>
             </template>
-            <el-menu-item index="/center">
+            <el-menu-item index="/shop/center">
                 <el-icon> <i-ep-menu /> </el-icon>
                 <span>所有项目</span>
             </el-menu-item> 
@@ -28,7 +28,11 @@
     background-color: #eee;
     height: 100vh;
     width: auto;
-    min-width: 20%;
-    padding: 2px;
+    margin: -4px;
+}
+.el-menu{
+  background-color: #eee;
+  width: 170px;
+
 }
 </style>

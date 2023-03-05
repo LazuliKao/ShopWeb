@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 export const useCounterStore = defineStore('id', {
   state: () => {
     return {
-      token: ''
+      token: '',
     }
   },
   actions: {

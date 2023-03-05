@@ -1,5 +1,5 @@
-<script lang="ts" >
-import { TryGetToken } from "@/stores/token"; 
+<script lang="ts">
+import { TryGetToken } from "@/stores/token";
 export default {
     data(): {
         token: undefined | string
@@ -14,7 +14,7 @@ export default {
     mounted() {
         let r = TryGetToken();
         if (!r.success) {
-          this.$router.push("/login/goto")
+           this.$router.push("/login/goto")
         } else {
             this.token = r.token;
         }
@@ -22,10 +22,8 @@ export default {
 }
 </script>
 <template>
-    <div>
-        <h3>
-            主页
-        </h3>
-        会话ID：{{ token }}
-    </div>
-</template> 
+  <div>
+    <h3>主页</h3>
+    会话ID：{{ token }}
+  </div>
+</template>

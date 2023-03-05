@@ -1,5 +1,6 @@
 <script lang="ts">
-import { TryGetToken, SetToken } from "@/stores/token";
+import { SetToken } from "@/stores/token";
+import { calcMd5 } from "@/utils/md5";
 export default {
   data() {
     return {
@@ -12,9 +13,9 @@ export default {
   methods: {
     Login: async function () {
       try {
-        let response = await this.axios.post("http://localhost:8080/login", {
+        let response = await this.axios.post("login", {
           user: this.user,
-          passwordMd5: this.password,
+          passwordMd5: calcMd5(this.password),
         });
         const {
           success,

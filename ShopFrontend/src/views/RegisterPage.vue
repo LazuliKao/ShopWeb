@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+enum PasswordError {
+  None,
+  NotSame,
+  AtLeast8Char,
+  AtLeast1Number,
+  AtLeast1Lowercase,
+  AtLeast1Uppercase,
+}
 enum UsernameError {
   None,
   TooShort,
@@ -7,6 +15,7 @@ enum UsernameError {
 </script>
 <script lang="ts">
 import { TryGetToken, SetToken } from "@/stores/token";
+import { calcMd5 } from "@/utils/md5";
 export default {
   data() {
     return {
@@ -15,8 +24,8 @@ export default {
       repeatPassword: "",
       result: "",
       success: false,
-      showPasswordError: false,
-      showUsernameError: UsernameError.None,
+      passwordError: PasswordError.None,
+      usernameError: UsernameError.None,
     };
   },
   watch: {
@@ -34,36 +43,53 @@ export default {
     checkUsername() {
       //长度大于3
       if (this.user.length < 3) {
-        this.showUsernameError = UsernameError.TooShort;
+        this.usernameError = UsernameError.TooShort;
       }
       //仅允许英文、数字、下划线
       else if (!/^[a-zA-Z0-9_]+$/.test(this.user)) {
-        this.showUsernameError = UsernameError.InvalidChar;
+        this.usernameError = UsernameError.InvalidChar;
       } else {
-        this.showUsernameError = UsernameError.None;
+        this.usernameError = UsernameError.None;
       }
     },
     checkPassword() {
-      if (this.password !== this.repeatPassword) {
-        this.showPasswordError = true;
+      if (this.password) {
+        if (this.password.length < 8) {
+          this.passwordError = PasswordError.AtLeast8Char;
+        } else if (!/[0-9]/.test(this.password)) {
+          this.passwordError = PasswordError.AtLeast1Number;
+        } else if (!/[a-z]/.test(this.password)) {
+          this.passwordError = PasswordError.AtLeast1Lowercase;
+        } else if (!/[A-Z]/.test(this.password)) {
+          this.passwordError = PasswordError.AtLeast1Uppercase;
+        } else if (this.password !== this.repeatPassword) {
+          this.passwordError = PasswordError.NotSame;
+        } else {
+          this.passwordError = PasswordError.None;
+        }
       } else {
-        this.showPasswordError = false;
+        //密码为空
+        this.passwordError = PasswordError.None;
+        return;
       }
     },
     Register: async function () {
       //check valid
       if (
-        this.showPasswordError ||
-        this.showUsernameError !== UsernameError.None
+        this.passwordError !== PasswordError.None ||
+        this.usernameError !== UsernameError.None
       ) {
         ElMessage.error("输入有误");
+        //refresh all <el-alert/>
+        this.checkPassword();
+        this.checkUsername();
         return;
       }
       //send request
       try {
-        let response = await this.axios.post("http://localhost:8080/register", {
+        let response = await this.axios.post("register", {
           user: this.user,
-          passwordMd5: this.password,
+          passwordMd5: calcMd5(this.password),
         });
         const {
           success,
@@ -131,21 +157,51 @@ export default {
     </div>
     <br />
     <el-alert
-      v-if="showPasswordError"
-      title="两次输入的密码不一致"
-      type="error"
-      show-icon
-    ></el-alert>
-    <el-alert
-      v-if="showUsernameError === UsernameError.TooShort"
+      v-if="usernameError === UsernameError.TooShort"
       title="用户名长度必须大于3"
       type="error"
       show-icon
     ></el-alert>
     <el-alert
-      v-if="showUsernameError === UsernameError.InvalidChar"
+      v-if="usernameError === UsernameError.InvalidChar"
       title="用户名只能包含英文、数字、下划线"
       type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="passwordError === PasswordError.NotSame"
+      title="两次输入的密码不一致"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="passwordError === PasswordError.AtLeast8Char"
+      title="密码长度必须大于8"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="passwordError === PasswordError.AtLeast1Number"
+      title="密码必须包含数字"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="passwordError === PasswordError.AtLeast1Lowercase"
+      title="密码必须包含小写字母"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="passwordError === PasswordError.AtLeast1Uppercase"
+      title="密码必须包含大写字母"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="success"
+      title="注册成功！"
+      type="success"
       show-icon
     ></el-alert>
   </div>

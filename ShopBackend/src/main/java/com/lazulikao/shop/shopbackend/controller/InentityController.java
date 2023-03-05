@@ -30,7 +30,6 @@ public class InentityController {
         user.setEmail(email);
         user.setPasswordMD5(passwordMD5);
         userService.saveUser(user);
-        System.out.println("register success" + username);
         return new RegisterResult(true, "register success" + username);
     }
     private record RegisterResult(boolean success, String message) {}
