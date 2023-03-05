@@ -1,3 +1,10 @@
+<script lang="ts" setup>
+enum UsernameError {
+  None,
+  TooShort,
+  InvalidChar,
+}
+</script>
 <script lang="ts">
 import { TryGetToken, SetToken } from "@/stores/token";
 export default {
@@ -8,7 +15,8 @@ export default {
       repeatPassword: "",
       result: "",
       success: false,
-      showError: false,
+      showPasswordError: false,
+      showUsernameError: UsernameError.None,
     };
   },
   watch: {
@@ -18,16 +26,40 @@ export default {
     repeatPassword() {
       this.checkPassword();
     },
+    user() {
+      this.checkUsername();
+    },
   },
   methods: {
+    checkUsername() {
+      //长度大于3
+      if (this.user.length < 3) {
+        this.showUsernameError = UsernameError.TooShort;
+      }
+      //仅允许英文、数字、下划线
+      else if (!/^[a-zA-Z0-9_]+$/.test(this.user)) {
+        this.showUsernameError = UsernameError.InvalidChar;
+      } else {
+        this.showUsernameError = UsernameError.None;
+      }
+    },
     checkPassword() {
       if (this.password !== this.repeatPassword) {
-        this.showError = true;
+        this.showPasswordError = true;
       } else {
-        this.showError = false;
+        this.showPasswordError = false;
       }
     },
     Register: async function () {
+      //check valid
+      if (
+        this.showPasswordError ||
+        this.showUsernameError !== UsernameError.None
+      ) {
+        ElMessage.error("输入有误");
+        return;
+      }
+      //send request
       try {
         let response = await this.axios.post("http://localhost:8080/register", {
           user: this.user,
@@ -88,7 +120,6 @@ export default {
         v-model="repeatPassword"
         show-password
         clearable
-        :class="{ error: showError }"
       />
     </div>
     <br />
@@ -98,6 +129,25 @@ export default {
         <el-button>返回登录</el-button>
       </RouterLink>
     </div>
+    <br />
+    <el-alert
+      v-if="showPasswordError"
+      title="两次输入的密码不一致"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="showUsernameError === UsernameError.TooShort"
+      title="用户名长度必须大于3"
+      type="error"
+      show-icon
+    ></el-alert>
+    <el-alert
+      v-if="showUsernameError === UsernameError.InvalidChar"
+      title="用户名只能包含英文、数字、下划线"
+      type="error"
+      show-icon
+    ></el-alert>
   </div>
 </template>
 
@@ -129,8 +179,5 @@ export default {
 
 .el-button {
   width: 100px;
-}
-.error input {
-  border-color: red !important;
 }
 </style>
