@@ -8,10 +8,12 @@ export default {
       password: "admin",
       result: "",
       success: false,
+      busy: false,
     };
   },
   methods: {
     Login: async function () {
+      this.busy = true;
       try {
         let response = await this.axios.post("login", {
           user: this.user,
@@ -42,6 +44,7 @@ export default {
         this.result = "登录失败！错误：" + err.name + " : " + err.message;
         ElMessage.error(this.result);
       }
+      this.busy = false;
     },
   },
 };
@@ -65,7 +68,9 @@ export default {
     </div>
     <br />
     <div class="button-container">
-      <el-button @click="Login" type="primary"> 登录 </el-button>
+      <el-button @click="Login" type="primary" :loading="busy">
+        登录
+      </el-button>
       <RouterLink to="/register"> <el-button>前往注册 </el-button></RouterLink>
     </div>
     <h4>

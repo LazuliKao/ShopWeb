@@ -16,21 +16,24 @@ public class InentityController {
     }
     @GetMapping("/login")
     @ResponseBody
-    public LoginResult login(String username, String password) {
+    public LoginResult login(String user, String password) {
+        System.out.println("try login : " + user);
         //find user in database
-        User user = userService.findUserByName(username);
-        return new LoginResult(true, "login success" + username);
+        var instance = userService.tryFindUserByName(user, password);
+        if (instance.isEmpty()) {
+            return new LoginResult(false, "用户名或密码错误");
+        }
+        return new LoginResult(true, "登录成功" + user);
     }
     private record LoginResult(boolean success, String message) {}
     @GetMapping("/register")
     @ResponseBody
-    public RegisterResult register(String username, String email, String passwordMD5) {
-        User user = new User();
-        user.setName(username);
-        user.setEmail(email);
-        user.setPasswordMD5(passwordMD5);
-        userService.saveUser(user);
-        return new RegisterResult(true, "register success" + username);
+    public RegisterResult register(String user, String email, String PasswordMd5) {
+        User instance = new User();
+        instance.setUser(user);
+        instance.setPasswordMd5(PasswordMd5);
+        userService.saveUser(instance);
+        return new RegisterResult(true, "register success" + user);
     }
     private record RegisterResult(boolean success, String message) {}
 }

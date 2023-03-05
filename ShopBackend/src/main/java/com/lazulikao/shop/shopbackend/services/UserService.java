@@ -4,6 +4,8 @@ import com.lazulikao.shop.shopbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -14,7 +16,14 @@ public class UserService {
     public User saveUser(User user) {
         return userRepository.save(user);
     }
-    public User findUserByName(String username) {
-          return userRepository.findOne(Example.of(new User())).orElse(null);
+    public Optional<User> tryFindUserByName(String username, String passwordMd5) {
+        User user = new User();
+        user.setUser(username);
+        user.setPasswordMd5(passwordMd5);
+        if (userRepository.exists(Example.of(user))) {
+            return Optional.of(user);
+        } else {
+            return Optional.empty();
+        }
     }
 }

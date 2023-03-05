@@ -26,6 +26,7 @@ export default {
       success: false,
       passwordError: PasswordError.None,
       usernameError: UsernameError.None,
+      busy:false
     };
   },
   watch: {
@@ -85,6 +86,7 @@ export default {
         this.checkUsername();
         return;
       }
+      this.  busy=true
       //send request
       try {
         let response = await this.axios.post("register", {
@@ -116,6 +118,7 @@ export default {
         this.result = "注册失败！错误：" + err.name + " : " + err.message;
         ElMessage.error(this.result);
       }
+    this. busy=false
     },
   },
 };
@@ -150,7 +153,7 @@ export default {
     </div>
     <br />
     <div class="button-container">
-      <el-button @click="Register" type="primary"> 注册 </el-button>
+      <el-button @click="Register" type="primary" :loading="busy"> 注册 </el-button>
       <RouterLink to="/login">
         <el-button>返回登录</el-button>
       </RouterLink>

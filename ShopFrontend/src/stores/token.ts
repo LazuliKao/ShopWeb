@@ -1,5 +1,5 @@
-import { useCounterStore } from "@/stores";
-const getStore = () => useCounterStore();
+import { useStore } from "@/stores";
+const getStore = () => useStore();
 export function TryGetToken(): { success: true, token: string }
     | { success: false, token: undefined } {
     const tk = getStore().token

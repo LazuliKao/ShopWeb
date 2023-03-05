@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores";
+import { useStore } from "@/stores";
 defineProps<{}>();
 </script>
 <script lang="ts">
