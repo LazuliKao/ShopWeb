@@ -19,10 +19,21 @@ export default {
   },
   methods: {
     RefreshCartItems: async function () {
-      let items = await this.axios.post("shop/getcartitems", {
+      let result = await this.axios.post("shop/getcart", {
         token: GetToken(),
       });
-      this.cartitems = items.data;
+      const {
+        success,
+        message,
+        items,
+      }: { success: boolean; message: string; items: Array<ShopItem> } =
+        result.data;
+      if (!success) {
+        ElMessage.error(message);
+        return;
+      }
+      ElMessage.success(message);
+      this.cartitems = items;
       this.loaded = true;
     },
   },
