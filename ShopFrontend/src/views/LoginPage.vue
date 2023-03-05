@@ -15,7 +15,7 @@ export default {
     Login: async function () {
       this.busy = true;
       try {
-        let response = await this.axios.post("login", {
+        let response = await this.axios.post("identity/login", {
           user: this.user,
           passwordMd5: calcMd5(this.password),
         });

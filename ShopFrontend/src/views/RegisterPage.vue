@@ -89,7 +89,7 @@ export default {
       this.busy = true;
       //send request
       try {
-        let response = await this.axios.post("register", {
+        let response = await this.axios.post("identity/register", {
           user: this.user,
           passwordMd5: calcMd5(this.password),
         });
