@@ -11,7 +11,7 @@ export default {
   } {
     return {
       loaded: false,
-      allitems: [],
+      allitems: []
     };
   },
   methods: {
@@ -34,11 +34,17 @@ export default {
       this.loaded = true;
     },
     AddToCart: async function (item: ShopItem) {
-      await this.axios.post("shop/addtocart", {
-        token: GetToken(),
-        id: item.id,
-        count: item.count,
-      });
+      const { success, message }: { success: boolean; message: string } =
+        (await this.axios.post("shop/addtocart", {
+          token: GetToken(),
+          id: item.id,
+          count: item.count,
+        })).data;
+      if (success) {
+        ElMessage.success(message);
+      } else {
+        ElMessage.error( message);
+      }
     },
   },
   mounted() {

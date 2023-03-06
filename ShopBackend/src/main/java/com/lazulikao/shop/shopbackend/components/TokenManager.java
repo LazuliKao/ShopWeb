@@ -19,7 +19,8 @@ public class TokenManager {
         // 生成随机token
         if (tokenCache.containsKey(username)) {
             //刷新token
-            var tk = tokenCache.replace(username, newToken());
+            var tk = newToken();
+            tokenCache.replace(username, tk);
             System.out.println("刷新token" + username + " " + tk);
             return tk;
         } else {

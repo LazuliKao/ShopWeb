@@ -7,6 +7,7 @@ const OnError = (text: string) => {
 <script lang="ts">
 import type { ShopItem } from "@/models/shop";
 import { CheckTokenOrRedirect, GetToken } from "@/stores/token";
+import type { id } from "element-plus/es/locale";
 export default {
   data(): {
     loaded: boolean;
@@ -18,6 +19,21 @@ export default {
     };
   },
   methods: {
+    SetToCart: async function (item: ShopItem) {
+      console.log(JSON.stringify(item));
+      const { success, message }: { success: boolean; message: string } = (
+        await this.axios.post("shop/settocart", {
+          token: GetToken(),
+          id: item.id,
+          count: item.count,
+        })
+      ).data;
+      if (success) {
+        ElMessage.success(message);
+      } else {
+        ElMessage.error(message);
+      }
+    },
     RefreshCartItems: async function () {
       let result = await this.axios.post("shop/getcart", {
         token: GetToken(),
@@ -60,7 +76,15 @@ export default {
         <td>{{ item.name }}</td>
         <td>{{ item.description }}</td>
         <td>
-          <shop-item-view :item="item" />
+          <shop-item-view
+            :item="item"
+            @item-changed="
+              (current, prev) => {
+                item.count = current;
+                SetToCart(item);
+              }
+            "
+          />
         </td>
       </tr>
     </table>
