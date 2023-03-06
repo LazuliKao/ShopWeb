@@ -17,9 +17,7 @@ public class UserService {
         return userRepository.save(user);
     }
     public boolean existsUser(String username) {
-        User user = new User();
-        user.setUser(username);
-        return userRepository.exists(Example.of(user));
+        return userRepository.existsUserByUser(username);
     }
     public Optional<User> tryFindUser(String username, String passwordMd5) {
         User user = new User();

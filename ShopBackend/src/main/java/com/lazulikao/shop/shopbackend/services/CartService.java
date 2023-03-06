@@ -15,25 +15,19 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
     public List<CartItem> getByUser(String user) {
-        var sample = new CartItem();
-        sample.setUser(user);
-        return cartRepository.findAll(Example.of(sample));
+        return cartRepository.findCartItemsByUser(user);
     }
     public boolean addToCart(String user, Long id, int count) {
         //返回指定用户的购物车中指定 id 的商品
-        var sample = new CartItem();
-        sample.setUser(user);
-        sample.setShopItemId(id);
-        var items = cartRepository.findAll(Example.of(sample));
-
-        if (items.isEmpty()) {
+        var item = cartRepository.findCartItemByUserAndShopItemId(user, id);
+        if (item.isEmpty()) {
             var newItem = new CartItem();
             newItem.setUser(user);
             newItem.setShopItemId(id);
             newItem.setCount(1);
             cartRepository.save(newItem);
         } else {
-            var oldItem = items.get(0);
+            var oldItem = item.get();
             oldItem.setCount(oldItem.getCount() + count);
             cartRepository.save(oldItem);
         }

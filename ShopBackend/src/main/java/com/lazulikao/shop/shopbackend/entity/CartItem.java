@@ -10,7 +10,7 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String User;
-    private Long ShopItemId;
+    private String user;
+    private Long shopItemId;
     private int count;
 }
