@@ -9,6 +9,18 @@ import type { ShopItem } from "@/models/shop";
 import { CheckTokenOrRedirect, GetToken } from "@/stores/token";
 import type { id } from "element-plus/es/locale";
 export default {
+  computed: {
+    FullPrice(): number {
+      let result = 0;
+      for (let i = 0; i < this.cartitems.length; i++) {
+        const element = this.cartitems[i];
+        if (element.count !== undefined) {
+          result += element.price * element.count;
+        }
+      }
+      return result;
+    }
+  },
   data(): {
     loaded: boolean;
     cartitems: Array<ShopItem>;
@@ -19,8 +31,27 @@ export default {
     };
   },
   methods: {
+    DelCart: async function (item: ShopItem) {
+      const { success, message }: { success: boolean; message: string } = (
+        await this.axios.post("shop/delcart", {
+          token: GetToken(),
+          id: item.id,
+        })
+      ).data;
+      if (success) {
+        ElMessage.success(message);
+        var index = this.cartitems.findIndex((x) => x.id === item.id);
+        if (index === -1) {
+          this.RefreshCartItems();
+        } else {
+          console.log(index);
+          this.cartitems.splice(index, 1);
+        }
+      } else {
+        ElMessage.error(message);
+      }
+    },
     SetToCart: async function (item: ShopItem) {
-      console.log(JSON.stringify(item));
       const { success, message }: { success: boolean; message: string } = (
         await this.axios.post("shop/settocart", {
           token: GetToken(),
@@ -57,13 +88,13 @@ export default {
     CheckTokenOrRedirect();
     setTimeout(() => {
       this.RefreshCartItems();
-    }, 500);
+    }, 50);
   },
 };
 </script>
 <template>
   <div>
-    购物车：
+    <el-button @click="RefreshCartItems">刷新购物车</el-button>
     <table v-if="loaded">
       <tr>
         <th>编号</th>
@@ -86,10 +117,13 @@ export default {
             "
           />
         </td>
+        <td>
+          <el-button @click="DelCart(item)">删除</el-button>
+        </td>
       </tr>
     </table>
     <div v-else>正在获取购物车商品</div>
-    <el-button @click="RefreshCartItems">刷新购物车</el-button>
+    <div>总价：{{ FullPrice }}</div>
   </div>
 </template>
 <style>

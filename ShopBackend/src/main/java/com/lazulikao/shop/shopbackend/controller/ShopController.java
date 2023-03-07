@@ -67,6 +67,24 @@ public class ShopController {
     }
     private record SetToCartRequest(String token, Long id, int count) {}
     private record SetToCartResult(boolean success, String message) {}
+    @PostMapping("/delcart")
+    @ResponseBody
+    public DelCartResult DelCart(@RequestBody DelCartRequest request) {
+        if (request.token == null || request.token.isEmpty()) {
+            return new DelCartResult(false, "空 token ");
+        }
+        var user = tokenManager.getUserNameFromToken(request.token);
+        if (user.isEmpty()) {
+            return new DelCartResult(false, "token 无效");
+        }
+        var success = cartService.DelCart(user.get(), request.id);
+        if (success) {
+            return new DelCartResult(true, "删除成功");
+        }
+        return new DelCartResult(false, "删除失败");
+    }
+    private record DelCartRequest(String token, Long id) {}
+    private record DelCartResult(boolean success, String message) {}
     @PostMapping("/getcart")
     @ResponseBody
     private GetCartResult GetCart(@RequestBody TokenRequest request) {
@@ -79,7 +97,7 @@ public class ShopController {
         }
         var cart = cartService.getByUser(user.get());
         var result = new java.util.ArrayList<ShopItem>();
-        for (var item : cart) {
+        for (var item : cart) {//通过ID查询具体信息
             var shopItem = shopService.getById(item.getShopItemId());
             if (shopItem.isEmpty()) {
                 System.out.println("商品不存在: " + item.getShopItemId());

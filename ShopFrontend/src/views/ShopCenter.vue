@@ -51,13 +51,13 @@ export default {
     CheckTokenOrRedirect();
     setTimeout(() => {
       this.RefreshAllItems();
-    }, 500);
+    }, 50);
   },
 };
 </script>
 <template>
   <div>
-    全部商品列表
+    <el-button @click="RefreshAllItems">刷新商品列表</el-button>
     <table v-if="loaded">
       <tr>
         <th>编号</th>
@@ -84,7 +84,6 @@ export default {
       </tr>
     </table>
     <div v-else>正在获取商品列表</div>
-    <el-button @click="RefreshAllItems">刷新列表</el-button>
   </div>
 </template>
 <style>

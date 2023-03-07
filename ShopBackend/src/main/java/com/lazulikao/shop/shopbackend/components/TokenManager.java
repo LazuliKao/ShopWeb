@@ -8,7 +8,7 @@ import java.util.UUID;
 @Component
 public class TokenManager {
     //token缓存
-    private Map<String, String> tokenCache = new HashMap<>();
+    private final Map<String, String> tokenCache = new HashMap<>();
     // 随机生成token
     private String newToken() {
         UUID uuid = UUID.randomUUID();

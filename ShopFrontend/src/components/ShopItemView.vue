@@ -18,8 +18,6 @@ export default {
   methods: {
     handleChange(current: number | undefined, prev: number | undefined) {
       this.$emit("itemChanged", current, prev);
-      console.log(current);
-      console.log(JSON.stringify(props.item));
     },
   },
 };

@@ -44,4 +44,12 @@ public class CartService {
         }
         return true;
     }
+    public boolean DelCart(String user, Long id) {
+        var item = cartRepository.findByUserAndShopItemId(user, id);
+        if (item.isPresent()) {
+            cartRepository.delete(item.get());
+            return true;
+        }
+        return false;
+    }
 }
