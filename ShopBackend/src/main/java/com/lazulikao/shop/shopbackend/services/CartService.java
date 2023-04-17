@@ -31,7 +31,7 @@ public class CartService {
             var newItem = new CartItem();
             newItem.setUser(user);
             newItem.setShopItemId(id);
-            newItem.setCount(1);
+            newItem.setCount(count);
             cartRepository.save(newItem);
         } else {
             var oldItem = item.get();
