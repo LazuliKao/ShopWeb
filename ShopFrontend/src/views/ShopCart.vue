@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     DelCart: async function (item: ShopItem) {
-      const { success, message } = await api.shop.delcart(GetToken(), item.id);
+      const { success, message } = await api.shop.delcart(item.id);
       if (success) {
         ElMessage.success(message);
         var index = this.cartitems.findIndex((x) => x.id === item.id);
@@ -49,7 +49,6 @@ export default {
     },
     SetToCart: async function (item: ShopItem) {
       const { success, message } = await api.shop.settocart(
-        GetToken(),
         item.id,
         item.count
       );
@@ -60,7 +59,7 @@ export default {
       }
     },
     RefreshCartItems: async function () {
-      const { success, message, items } = await api.shop.getcart(GetToken());
+      const { success, message, items } = await api.shop.getcart();
       if (!success) {
         ElMessage.error(message);
         return;
@@ -88,35 +87,40 @@ export default {
         >
       </div>
     </template>
-    <table v-if="loaded">
-      <tr>
-        <th>编号</th>
-        <th>商品名称</th>
-        <th>描述</th>
-        <th>操作</th>
-      </tr>
-      <tr v-for="item in cartitems">
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.description }}</td>
-        <td>
-          <shop-item-view
-            :item="item"
-            @item-changed="
-              (current, prev) => {
-                item.count = current;
-                SetToCart(item);
-              }
-            "
-          />
-        </td>
-        <td>
-          <el-button @click="DelCart(item)">删除</el-button>
-        </td>
-      </tr>
-    </table>
+    <div v-if="loaded">
+      <div v-if="cartitems.length">
+        <table>
+          <tr>
+            <th>编号</th>
+            <th>商品名称</th>
+            <th>描述</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="item in cartitems">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td>
+              <shop-item-view
+                :item="item"
+                @item-changed="
+                  (current, prev) => {
+                    item.count = current;
+                    SetToCart(item);
+                  }
+                "
+              />
+            </td>
+            <td>
+              <el-button @click="DelCart(item)">删除</el-button>
+            </td>
+          </tr>
+        </table>
+        <h3 style="float: right">总价：{{ FullPrice }}</h3>
+      </div>
+      <div v-else>空空如也</div>
+    </div>
     <div v-else>正在获取购物车商品</div>
-    <div>总价：{{ FullPrice }}</div>
   </el-card>
 </template>
 <style scoped>

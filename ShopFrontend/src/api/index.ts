@@ -1,52 +1,70 @@
 import axios from "axios";
 import { calcMd5 } from "@/utils/md5";
 import type { ShopItem } from "@/models/shop";
+import { GetToken } from "@/stores/token";
 axios.defaults.baseURL = "http://192.168.16.233:8081";
+axios.interceptors.request.use(
+  function (config) {
+    const token = GetToken();
+    config.headers.Authorization = token;
+    if (!config.data) config.data = {};
+    config.data.token = token;
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    const msg = error.response?.data?.message;
+    if (msg) {
+      ElMessage.error(msg);
+    } else if (error.response?.status == 401) {
+      ElMessage.error("未登录");
+    } else {
+      ElMessage.error("未知错误" + error.response?.status);
+    }
+    return Promise.reject(error);
+  }
+);
 export const api = {
   shop: {
-    delcart: async (token: string | undefined, id: string) =>
+    delcart: async (id: string) =>
       (
         await axios.post("shop/delcart", {
-          token: token,
           id: id,
         })
       ).data as { success: boolean; message: string },
-    all: async (token: string | undefined) =>
-      (
-        await axios.post("shop/all", {
-          token: token,
-        })
-      ).data as { success: boolean; message: string; items: Array<ShopItem> },
-    settocart: async (
-      token: string | undefined,
-      id: string,
-      count: number | undefined
-    ) =>
+    all: async () =>
+      (await axios.post("shop/all")).data as {
+        success: boolean;
+        message: string;
+        items: Array<ShopItem>;
+      },
+    settocart: async (id: string, count: number | undefined) =>
       (
         await axios.post("shop/settocart", {
-          token: token,
           id: id,
           count: count,
         })
       ).data as { success: boolean; message: string },
-    addtocart: async (
-      token: string | undefined,
-      id: string,
-      count: number | undefined
-    ) =>
+    addtocart: async (id: string, count: number | undefined) =>
       (
         await axios.post("shop/addtocart", {
-          token: token,
           id: id,
           count: count,
         })
       ).data as { success: boolean; message: string },
-    getcart: async (token: string | undefined) =>
-      (
-        await axios.post("shop/getcart", {
-          token: token,
-        })
-      ).data as { success: boolean; message: string; items: Array<ShopItem> },
+    getcart: async () =>
+      (await axios.post("shop/getcart")).data as {
+        success: boolean;
+        message: string;
+        items: Array<ShopItem>;
+      },
   },
   identity: {
     login: async (user: string, password: string) => {

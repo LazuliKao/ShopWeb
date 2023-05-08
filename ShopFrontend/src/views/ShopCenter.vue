@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     RefreshAllItems: async function () {
-      const { success, message, items } = await api.shop.all(GetToken());
+      const { success, message, items } = await api.shop.all();
       if (!success) {
         ElMessage.error(message);
         return;
@@ -31,7 +31,6 @@ export default {
     },
     AddToCart: async function (item: ShopItem) {
       const { success, message } = await api.shop.addtocart(
-        GetToken(),
         item.id,
         item.count
       );
@@ -63,7 +62,7 @@ export default {
     </template>
     <table>
       <el-row>
-        <el-col v-for="item in allitems" :key="item.data.id" :span="8">
+        <el-col v-for="item in allitems" :key="item.data.id" :span="40">
           <el-card :body-style="{ padding: '0px' }" style="margin: 5px">
             <div
               style="

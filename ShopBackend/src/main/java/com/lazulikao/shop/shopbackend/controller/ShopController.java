@@ -25,7 +25,7 @@ public class ShopController {
     @PostMapping("/all")
     @ResponseBody
     public GetAllResult getShopList(@RequestBody TokenRequest request) {
-        if (request.token == null || request.token.isEmpty() || !tokenManager.verifyToken(request.token)) {
+        if ( request.token.isEmpty() || !tokenManager.verifyToken(request.token)) {
             return new GetAllResult(false, "token 无效", null);
         }
         var all = shopService.getShopList();
@@ -34,9 +34,6 @@ public class ShopController {
     @PostMapping("/addtocart")
     @ResponseBody
     public AddToCartResult addToCart(@RequestBody AddToCartRequest request) {
-        if (request.token == null || request.token.isEmpty()) {
-            return new AddToCartResult(false, "空 token ");
-        }
         var user = tokenManager.getUserNameFromToken(request.token);
         if (user.isEmpty()) {
             return new AddToCartResult(false, "token 无效");
@@ -52,9 +49,6 @@ public class ShopController {
     @PostMapping("/settocart")
     @ResponseBody
     public SetToCartResult setToCart(@RequestBody SetToCartRequest request) {
-        if (request.token == null || request.token.isEmpty()) {
-            return new SetToCartResult(false, "空 token ");
-        }
         var user = tokenManager.getUserNameFromToken(request.token);
         if (user.isEmpty()) {
             return new SetToCartResult(false, "token 无效");
@@ -70,9 +64,6 @@ public class ShopController {
     @PostMapping("/delcart")
     @ResponseBody
     public DelCartResult DelCart(@RequestBody DelCartRequest request) {
-        if (request.token == null || request.token.isEmpty()) {
-            return new DelCartResult(false, "空 token ");
-        }
         var user = tokenManager.getUserNameFromToken(request.token);
         if (user.isEmpty()) {
             return new DelCartResult(false, "token 无效");
@@ -88,9 +79,6 @@ public class ShopController {
     @PostMapping("/getcart")
     @ResponseBody
     private GetCartResult GetCart(@RequestBody TokenRequest request) {
-        if (request.token == null || request.token.isEmpty()) {
-            return new GetCartResult(false, "空 token ", null);
-        }
         var user = tokenManager.getUserNameFromToken(request.token);
         if (user.isEmpty()) {
             return new GetCartResult(false, "token 无效", null);

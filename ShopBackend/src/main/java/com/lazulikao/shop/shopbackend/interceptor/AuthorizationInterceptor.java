@@ -12,28 +12,20 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     @Autowired
     private TokenManager tokenManager;
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null) {
-            String token = authorizationHeader; // 获取Token
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod()))
+            return true;
+        String token = request.getHeader("Authorization");
+        if (token != null) {
             // 进行Token验证和鉴权
             //todo 验证token
-//            var user = tokenManag
-//
-//            er.getUserNameFromToken(token);
-//            if (user.isPresent()) {
-//                return true;
-//            } else {
-//                response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 返回未经授权的错误响应
-//                return false;
-//            }
-            return true;
-        } else {
-//            System.out.println("AuthorizationInterceptor.preHandle: response.getStatus() = " + response.getStatus());
-//            response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 返回未经授权的错误响应
-//            return false;
-            return true;
+            if (tokenManager.verifyToken(token)) {
+                return true;
+            }
         }
+        System.out.println("AuthorizationInterceptor.preHandle: response.getStatus() = " + response.getStatus());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 返回未经授权的错误响应
+        return false;
     }
 }
 
