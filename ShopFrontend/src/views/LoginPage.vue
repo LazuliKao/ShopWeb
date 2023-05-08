@@ -1,6 +1,6 @@
 <script lang="ts">
+import { api } from "@/api";
 import { SetToken, GetSource } from "@/stores/token";
-import { calcMd5 } from "@/utils/md5";
 export default {
   data() {
     return {
@@ -15,19 +15,10 @@ export default {
     Login: async function () {
       this.busy = true;
       try {
-        let response = await this.axios.post("identity/login", {
-          user: this.user,
-          passwordMd5: calcMd5(this.password),
-        });
-        const {
-          success,
-          message,
-          token,
-        }: {
-          success: boolean;
-          message: string;
-          token: string;
-        } = response.data;
+        const { success, message, token } = await api.identity.login(
+          this.user,
+          this.password
+        );
         this.success = success;
         if (success) {
           this.result = message + "\n将在1秒后跳转";

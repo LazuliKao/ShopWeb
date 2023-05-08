@@ -14,6 +14,7 @@ enum UsernameError {
 }
 </script>
 <script lang="ts">
+import { api } from "@/api";
 import { SetToken, GetSource } from "@/stores/token";
 import { calcMd5 } from "@/utils/md5";
 export default {
@@ -89,19 +90,10 @@ export default {
       this.busy = true;
       //send request
       try {
-        let response = await this.axios.post("identity/register", {
-          user: this.user,
-          passwordMd5: calcMd5(this.password),
-        });
-        const {
-          success,
-          message,
-          token,
-        }: {
-          success: boolean;
-          message: string;
-          token: string;
-        } = response.data;
+        const { success, message, token } = await api.identity.register(
+          this.user,
+          this.password
+        );
         this.success = success;
         if (success) {
           this.result = message + "\n将在1秒后跳转";

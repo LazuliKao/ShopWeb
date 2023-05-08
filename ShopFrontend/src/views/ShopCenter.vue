@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { api } from "@/api";
 import "../components/ShopItemView.vue";
 </script>
 <script lang="ts">
@@ -16,15 +17,7 @@ export default {
   },
   methods: {
     RefreshAllItems: async function () {
-      let result = await this.axios.post("shop/all", {
-        token: GetToken(),
-      });
-      const {
-        success,
-        message,
-        items,
-      }: { success: boolean; message: string; items: Array<ShopItem> } =
-        result.data;
+      const { success, message, items } = await api.shop.all(GetToken());
       if (!success) {
         ElMessage.error(message);
         return;
@@ -34,13 +27,11 @@ export default {
       this.loaded = true;
     },
     AddToCart: async function (item: ShopItem) {
-      const { success, message }: { success: boolean; message: string } = (
-        await this.axios.post("shop/addtocart", {
-          token: GetToken(),
-          id: item.id,
-          count: item.count,
-        })
-      ).data;
+      const { success, message } = await api.shop.addtocart(
+        GetToken(),
+        item.id,
+        item.count
+      );
       if (success) {
         ElMessage.success(message);
       } else {

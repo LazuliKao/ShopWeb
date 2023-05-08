@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { api } from "@/api";
 import "../components/ShopItemView.vue";
 const OnError = (text: string) => {
   ElMessage.error(text);
@@ -19,7 +20,7 @@ export default {
         }
       }
       return result;
-    }
+    },
   },
   data(): {
     loaded: boolean;
@@ -32,12 +33,7 @@ export default {
   },
   methods: {
     DelCart: async function (item: ShopItem) {
-      const { success, message }: { success: boolean; message: string } = (
-        await this.axios.post("shop/delcart", {
-          token: GetToken(),
-          id: item.id,
-        })
-      ).data;
+      const { success, message } = await api.shop.delcart(GetToken(), item.id);
       if (success) {
         ElMessage.success(message);
         var index = this.cartitems.findIndex((x) => x.id === item.id);
@@ -52,13 +48,11 @@ export default {
       }
     },
     SetToCart: async function (item: ShopItem) {
-      const { success, message }: { success: boolean; message: string } = (
-        await this.axios.post("shop/settocart", {
-          token: GetToken(),
-          id: item.id,
-          count: item.count,
-        })
-      ).data;
+      const { success, message } = await api.shop.settocart(
+        GetToken(),
+        item.id,
+        item.count
+      );
       if (success) {
         ElMessage.success(message);
       } else {
@@ -66,15 +60,7 @@ export default {
       }
     },
     RefreshCartItems: async function () {
-      let result = await this.axios.post("shop/getcart", {
-        token: GetToken(),
-      });
-      const {
-        success,
-        message,
-        items,
-      }: { success: boolean; message: string; items: Array<ShopItem> } =
-        result.data;
+      const { success, message, items } = await api.shop.getcart(GetToken());
       if (!success) {
         ElMessage.error(message);
         return;

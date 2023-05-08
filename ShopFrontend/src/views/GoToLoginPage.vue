@@ -10,7 +10,8 @@ export default {
       timeoutids: new Array<number>(), //当前计时器ID
     };
   },
-  unmounted() {//卸载时清除计时器
+  unmounted() {
+    //卸载时清除计时器
     this.timeoutids.forEach((id) => {
       try {
         clearTimeout(id);
@@ -22,7 +23,7 @@ export default {
     for (i = 0; i < this.time; i++) {
       this.timeoutids.push(
         setTimeout(() => {
-          this.time -= 1;
+          this.time -= 1; //倒计时
         }, 1000 * i)
       );
     }
