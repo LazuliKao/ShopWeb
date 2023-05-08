@@ -28,6 +28,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 返回未经授权的错误响应
+            System.out.println("AuthorizationInterceptor.preHandle: response.getStatus() = " + response.getStatus());
             return false;
         }
     }
