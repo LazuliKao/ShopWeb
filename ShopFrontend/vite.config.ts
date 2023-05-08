@@ -13,6 +13,8 @@ import Icons from "unplugin-icons/vite";
 export default defineConfig({
   server: {
     port: 4000,
+    open: true,
+    host: "0.0.0.0",
   },
   plugins: [
     vue(),

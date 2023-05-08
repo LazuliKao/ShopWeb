@@ -1,6 +1,7 @@
 import axios from "axios";
 import { calcMd5 } from "@/utils/md5";
 import type { ShopItem } from "@/models/shop";
+axios.defaults.baseURL = "http://192.168.16.233:8081";
 export const api = {
   shop: {
     delcart: async (token: string | undefined, id: string) =>
@@ -22,7 +23,7 @@ export const api = {
       count: number | undefined
     ) =>
       (
-        await axios.post("shop/delcart", {
+        await axios.post("shop/settocart", {
           token: token,
           id: id,
           count: count,

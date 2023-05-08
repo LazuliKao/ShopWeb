@@ -18,7 +18,9 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             String token = authorizationHeader; // 获取Token
             // 进行Token验证和鉴权
             //todo 验证token
-//            var user = tokenManager.getUserNameFromToken(token);
+//            var user = tokenManag
+//
+//            er.getUserNameFromToken(token);
 //            if (user.isPresent()) {
 //                return true;
 //            } else {

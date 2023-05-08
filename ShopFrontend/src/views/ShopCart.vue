@@ -79,8 +79,15 @@ export default {
 };
 </script>
 <template>
-  <div>
-    <el-button @click="RefreshCartItems">刷新购物车</el-button>
+  <el-card v-if="loaded">
+    <template #header>
+      <div class="card-header">
+        <span>商品列表</span>
+        <el-button class="button" text @click="RefreshCartItems"
+          >刷新购物车</el-button
+        >
+      </div>
+    </template>
     <table v-if="loaded">
       <tr>
         <th>编号</th>
@@ -110,13 +117,11 @@ export default {
     </table>
     <div v-else>正在获取购物车商品</div>
     <div>总价：{{ FullPrice }}</div>
-  </div>
+  </el-card>
 </template>
-<style>
-.btadd {
-  margin-left: 5px;
-}
-.numtb {
-  width: 30px;
+<style scoped>
+.card-header {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
