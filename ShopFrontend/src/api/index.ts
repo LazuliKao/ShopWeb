@@ -2,6 +2,7 @@ import axios from "axios";
 import { calcMd5 } from "@/utils/md5";
 import type { ShopItem } from "@/models/shop";
 import { GetToken } from "@/stores/token";
+import router from "@/router";
 axios.defaults.baseURL = "http://192.168.16.233:8081";
 axios.interceptors.request.use(
   function (config) {
@@ -25,6 +26,7 @@ axios.interceptors.response.use(
       ElMessage.error(msg);
     } else if (error.response?.status == 401) {
       ElMessage.error("未登录");
+      router.push("/login/goto");
     } else {
       ElMessage.error("未知错误" + error.response?.status);
     }

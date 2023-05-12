@@ -22,7 +22,7 @@ public class CrosConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4000", "http://192.168.16.233:4000")
+                .allowedOrigins("http://localhost:4000", "http://192.168.16.233:4000","http://10.81.217.115:4000")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);

@@ -1,14 +1,10 @@
 <script lang="ts" setup>
 import { api } from "@/api";
 import "../components/ShopItemView.vue";
-const OnError = (text: string) => {
-  ElMessage.error(text);
-};
 </script>
 <script lang="ts">
 import type { ShopItem } from "@/models/shop";
-import { CheckTokenOrRedirect, GetToken } from "@/stores/token";
-import type { id } from "element-plus/es/locale";
+import { CheckTokenOrRedirect } from "@/stores/token";
 export default {
   computed: {
     FullPrice(): number {
