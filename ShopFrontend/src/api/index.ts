@@ -3,7 +3,7 @@ import { calcMd5 } from "@/utils/md5";
 import type { ShopItem } from "@/models/shop";
 import { GetToken } from "@/stores/token";
 import router from "@/router";
-axios.defaults.baseURL = "http://192.168.16.233:8081";
+axios.defaults.baseURL = "http://10.81.217.115:8081";
 axios.interceptors.request.use(
   function (config) {
     const token = GetToken();

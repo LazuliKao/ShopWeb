@@ -13,7 +13,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     private TokenManager tokenManager;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod()))
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod()))//跨域请求会先进行一次options请求，放行
             return true;
         String token = request.getHeader("Authorization");
         if (token != null) {
